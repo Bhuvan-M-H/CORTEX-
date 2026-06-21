@@ -330,7 +330,7 @@ export default function Home() {
       
       setSimulationStatus('synthesizing');
       await new Promise(resolve => setTimeout(resolve, 800));
-      addLog("EventDNA Synthesizer compiling structural details and text fields...", 'info');
+      addLog("CORTEX Synthesizer compiling structural details and text fields...", 'info');
       
       setSimulationStatus('predicting');
       await new Promise(resolve => setTimeout(resolve, 800));
@@ -965,8 +965,8 @@ export default function Home() {
               <Shield className="text-white" size={24} />
             </div>
             <div>
-              <h1 className="text-lg font-bold tracking-tight text-white glow-text-indigo">EventDNA AI</h1>
-              <p className="text-[10px] uppercase tracking-wider text-cyan-400 font-semibold font-mono">Smart City Upgrade</p>
+              <h1 className="text-lg font-bold tracking-tight text-white glow-text-indigo">CORTEX AI</h1>
+              <p className="text-[10px] uppercase tracking-wider text-cyan-400 font-semibold font-mono">Congestion operations and traffic response expert</p>
             </div>
           </div>
 
@@ -974,7 +974,7 @@ export default function Home() {
           <nav className="space-y-1">
             {[
               { id: 'command-center', name: 'Command Center', icon: Activity },
-              { id: 'explorer', name: 'EventDNA Explorer', icon: Layers },
+              { id: 'explorer', name: 'CORTEX Explorer', icon: Layers },
               { id: 'impact-radius', name: 'Impact Radius GIS', icon: MapIcon },
               { id: 'diversion-optimizer', name: 'Diversion Optimizer', icon: Navigation },
               { id: 'officer-allocation', name: 'Officer Management', icon: Users },
@@ -1350,7 +1350,7 @@ export default function Home() {
         {activeTab === 'explorer' && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold tracking-tight text-white glow-text-indigo">EventDNA Explorer</h2>
+              <h2 className="text-2xl font-bold tracking-tight text-white glow-text-indigo">CORTEX Explorer</h2>
               <p className="text-slate-400 text-sm">Natural Language Description Generator & Semantic Vector Inspector</p>
             </div>
 
@@ -1396,7 +1396,7 @@ export default function Home() {
                       </div>
 
                       <div className="p-4 rounded-lg bg-gradient-to-r from-indigo-900/20 to-cyan-900/10 border border-indigo-500/30">
-                        <span className="text-[10px] font-mono uppercase font-bold tracking-wider text-indigo-400">Generated EventDNA Semantic Text:</span>
+                        <span className="text-[10px] font-mono uppercase font-bold tracking-wider text-indigo-400">Generated CORTEX Semantic Text:</span>
                         <p className="text-sm text-slate-100 font-medium mt-1 leading-relaxed">
                           "{selectedEvent.generated_description}"
                         </p>
@@ -1407,7 +1407,7 @@ export default function Home() {
                   {/* S-BERT Embedding Inspector */}
                   <div className="glass-panel p-5 rounded-xl">
                     <h3 className="text-base font-bold text-white mb-3 flex items-center gap-2 text-cyan-400">
-                      <Layers size={16} /> Module 2: Sentence-BERT Vector (EventDNA Embeddings)
+                      <Layers size={16} /> Module 2: Sentence-BERT Vector (CORTEX Embeddings)
                     </h3>
                     <p className="text-xs text-slate-400 mb-4 leading-relaxed">
                       Below is a visual simulation of the 384-dimensional dense vector representing this event description, encoded using the pre-trained <strong>all-MiniLM-L6-v2</strong> model. This vector captures the deep semantic content and forms the unique DNA of the incident.
@@ -1478,7 +1478,7 @@ export default function Home() {
               </div>
             ) : (
               <div className="glass-panel p-6 text-center text-slate-400 rounded-xl">
-                Please select an event in the Command Center list to explore its EventDNA.
+                Please select an event in the Command Center list to explore its CORTEX.
               </div>
             )}
           </div>
@@ -2162,7 +2162,7 @@ export default function Home() {
                   <BookOpen className="text-slate-500 mb-2" size={32} />
                   <h3 className="text-sm font-bold text-slate-300">Log Incident Outcomes</h3>
                   <p className="text-xs text-slate-400 font-light">
-                    Select an active incident from the **Command Center** or **EventDNA Explorer** tab to submit actual observations and calibrate the self-learning ML dispatch engine.
+                    Select an active incident from the **Command Center** or **CORTEX Explorer** tab to submit actual observations and calibrate the self-learning ML dispatch engine.
                   </p>
                 </div>
               )}
@@ -2542,7 +2542,7 @@ export default function Home() {
             <div className="flex justify-between items-center">
               <div>
                 <h2 className="text-2xl font-bold tracking-tight text-white glow-text-indigo">Astram Real-Time Stream Simulator</h2>
-                <p className="text-slate-400 text-sm">Simulate active telemetry ingestion from the Astram feed and observe the automated EventDNA AI operation pipeline in real time.</p>
+                <p className="text-slate-400 text-sm">Simulate active telemetry ingestion from the Astram feed and observe the automated CORTEX AI operation pipeline in real time.</p>
               </div>
               <div className="flex items-center gap-3">
                 <span className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold ${
@@ -2646,7 +2646,7 @@ export default function Home() {
                 <div className="space-y-3 font-mono text-xs">
                   <div className="flex justify-between py-1.5 border-b border-slate-800/60">
                     <span className="text-slate-500">Pipeline Engine:</span>
-                    <span className="text-cyan-400">EventDNA AI v2.0</span>
+                     <span className="text-cyan-400">CORTEX AI v2.0</span>
                   </div>
                   <div className="flex justify-between py-1.5 border-b border-slate-800/60">
                     <span className="text-slate-500">Inbound Feed:</span>
@@ -2789,7 +2789,7 @@ export default function Home() {
                       {/* Step 2 details: Synthesis */}
                       {['synthesizing', 'predicting', 'dispatching', 'completed'].includes(simulationStatus) && (
                         <div className="animate-fade-in border-t border-slate-800/60 pt-3">
-                          <span className="text-[10px] text-slate-500 font-mono block">STEP 2: EVENTDNA DESCRIPTION SYNTHESIS (S-BERT)</span>
+                          <span className="text-[10px] text-slate-500 font-mono block">STEP 2: CORTEX DESCRIPTION SYNTHESIS (S-BERT)</span>
                           <div className="text-xs text-cyan-300 italic mt-1.5 bg-cyan-950/10 p-2.5 rounded border border-cyan-500/10 leading-relaxed">
                             "{generateDescriptionFromParams(
                               currentStepEvent.event_cause,

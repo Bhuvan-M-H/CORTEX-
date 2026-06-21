@@ -1,6 +1,6 @@
-# EventDNA AI: Final Implementation Report
+# CORTEX AI: Final Implementation Report
 
-EventDNA AI is a self-learning event impact intelligence and traffic operations copilot built for the Astram event traffic operations platform. The system uses sparse multimodal event data (structural details combined with natural language description embeddings) to predict event traffic impact, recommend tactical dispatch resources, and continuously improve through a post-event learning feedback loop (Traffic Operations Memory).
+CORTEX AI is a self-learning event impact intelligence and traffic operations copilot built for the Astram event traffic operations platform. The system uses sparse multimodal event data (structural details combined with natural language description embeddings) to predict event traffic impact, recommend tactical dispatch resources, and continuously improve through a post-event learning feedback loop (Traffic Operations Memory).
 
 ---
 

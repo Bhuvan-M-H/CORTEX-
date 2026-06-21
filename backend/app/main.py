@@ -31,7 +31,7 @@ from . import database
 from . import live_traffic
 
 app = FastAPI(
-    title="EventDNA AI Smart City Platform",
+    title="CORTEX AI Smart City Platform",
     description="Command & Control Platform for Intelligent Event-Aware Traffic Operations",
     version="2.0.0"
 )
@@ -114,7 +114,7 @@ def startup_event():
 def read_root():
     return {
         "status": "online",
-        "service": "EventDNA AI Smart City Platform",
+        "service": "CORTEX AI Smart City Platform",
         "description": "AI-powered Traffic Command & Control Platform"
     }
 

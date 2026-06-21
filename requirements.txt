@@ -9,4 +9,3 @@ faiss-cpu
 python-dotenv
 joblib
 requests
-sentence-transformers

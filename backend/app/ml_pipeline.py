@@ -2,7 +2,6 @@ import os
 import faiss
 import numpy as np
 import pandas as pd
-from sentence_transformers import SentenceTransformer
 import joblib
 import sqlite3
 
@@ -19,11 +18,49 @@ _faiss_index = None
 _regressor = None
 _encoders = None
 
+class HuggingFaceSBertMock:
+    def encode(self, texts, **kwargs):
+        import requests
+        import time
+        is_single = isinstance(texts, str)
+        if is_single:
+            texts = [texts]
+            
+        embeddings = []
+        api_url = "https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2"
+        hf_token = os.environ.get("HUGGINGFACE_API_KEY") or os.environ.get("HF_TOKEN")
+        headers = {}
+        if hf_token:
+            headers["Authorization"] = f"Bearer {hf_token}"
+            
+        for text in texts:
+            emb = None
+            for attempt in range(3):
+                try:
+                    response = requests.post(api_url, headers=headers, json={"inputs": text}, timeout=10)
+                    if response.status_code == 200:
+                        res_json = response.json()
+                        if isinstance(res_json, list):
+                            emb = res_json
+                            break
+                    elif response.status_code == 503:
+                        time.sleep(2) # Model is loading on HF, wait and retry
+                    else:
+                        print(f"HF API error {response.status_code}: {response.text}")
+                except Exception as e:
+                    print(f"HF API exception: {e}")
+            if emb is None:
+                print("Warning: Hugging Face API call failed, using zero embedding fallback")
+                emb = [0.0] * 384
+            embeddings.append(emb)
+            
+        return np.array(embeddings) if not is_single else embeddings[0]
+
 def get_sbert_model():
     global _sbert_model
     if _sbert_model is None:
-        print("Loading Sentence-BERT model...")
-        _sbert_model = SentenceTransformer('all-MiniLM-L6-v2')
+        print("Using HuggingFace S-BERT Serverless API Mock...")
+        _sbert_model = HuggingFaceSBertMock()
     return _sbert_model
 
 def get_faiss_index():

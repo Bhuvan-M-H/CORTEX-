@@ -14,7 +14,7 @@ import {
 } from 'recharts';
 import 'leaflet/dist/leaflet.css';
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
 interface Event {
   id: number;
@@ -419,7 +419,7 @@ export default function Home() {
     try {
       // 1. Fetch Events
       const eventsRes = await fetch(`${API_URL}/api/events?page=1&page_size=30`);
-      if (!eventsRes.ok) throw new Error("Failed to connect to API backend. Make sure the FastAPI server is running on localhost:8000.");
+      if (!eventsRes.ok) throw new Error(`Failed to connect to API backend at ${API_URL}. Make sure your backend server is running.`);
       const eventsData = await eventsRes.json();
       setEventsData(eventsData);
       

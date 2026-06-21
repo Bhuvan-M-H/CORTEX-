@@ -151,27 +151,8 @@ Illustrates model regularization (preventing overfitting) and visualizes the pre
 
 ---
 
-## 6. Live Platform Screenshots
 
-#### I. Command Center & Active Incidents Map
-Real-time command center interface displaying active events, risk thresholds, and the GIS tracking map:
-![Command Center](./docs/images/media__1782032499211.png)
-
-#### II. Traffic Operations Memory (TOM) Learning Curves
-Visualizes the running prediction accuracy, error reduction curves, and the supervisor feedback logs:
-![TOM Memory](./docs/images/media__1782032815061.png)
-
-#### III. Zone Risk Intelligence Heatmaps
-Predictive risk scores mapped across Bangalore zones:
-![Zone Risk](./docs/images/media__1782035636823.png)
-
-#### IV. Underpass Waterlogging Alerts Dashboard
-Telemetry rain gauge simulator showing triggered alerts and emergency officer dispatch lists:
-![Waterlogging Alerts](./docs/images/media__1782038142486.png)
-
----
-
-## 7. Run Instructions
+## 6. Run Instructions
 
 ### 1. Start the FastAPI Backend
 ```powershell

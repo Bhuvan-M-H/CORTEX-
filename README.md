@@ -1,6 +1,6 @@
 # EventDNA AI (GridLock)
 
-EventDNA AI is a self-learning event impact intelligence and traffic operations copilot built for the Astram event traffic operations platform. The system uses sparse multimodal event data (combining structural event details with natural language description embeddings) to predict traffic impact scores, recommend tactical dispatch resources, and continuously improve through a post-event learning feedback loop (Traffic Operations Memory).
+EventDNA AI is a self-learning event impact intelligence and traffic operations copilot built for the Astram event traffic operations platform. The system uses sparse multimodal event data (combining structural event details with natural language description embeddings) to predict traffic impact scores, recommend tactical dispatch resources, and continuously improve through a post-event learning feedback loop (Traffic Operations Memory)
 
 ---
 

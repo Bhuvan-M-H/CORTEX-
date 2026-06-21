@@ -9,3 +9,7 @@ faiss-cpu
 python-dotenv
 joblib
 requests
+geopy
+shapely
+h3
+openpyxl

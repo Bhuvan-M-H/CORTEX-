@@ -1,6 +1,7 @@
-# EventDNA AI (GridLock)
+# CORTEX AI
+### **Congestion Operations and Traffic Response Expert**
 
-EventDNA AI is a self-learning event impact intelligence and traffic operations copilot built for the Astram event traffic operations platform. The system uses sparse multimodal event data (combining structural event details with natural language description embeddings) to predict traffic impact scores, recommend tactical dispatch resources, and continuously improve through a post-event learning feedback loop (Traffic Operations Memory)
+CORTEX AI is a self-learning event impact intelligence and traffic operations copilot built for the Astram event traffic operations platform. The system uses sparse multimodal event data (combining structural event details with natural language description embeddings) to predict traffic impact scores, recommend tactical dispatch resources, and continuously improve through a post-event learning feedback loop (Traffic Operations Memory).
 
 ---
 
@@ -11,11 +12,16 @@ graph TD
     %% Frontend Dashboard
     subgraph Frontend [Next.js App - Port 3000]
         CC[Command Center Dashboard]
-        DNA[EventDNA Explorer]
-        SE[Similar Event Search]
-        OC[Operations Copilot]
+        CE[CORTEX Explorer]
+        IR[Impact Radius GIS Map]
+        DO[Diversion Optimizer]
+        OM[Officer Management]
+        LO[Log Outcomes Form]
+        TOM[Traffic Operations Memory TOM]
         ZR[Zone Risk Intelligence]
-        TOM[Traffic Operations Memory]
+        PA[Post Event Analytics]
+        AS[Astram Feed Sim]
+        WL[Waterlogging Alerts]
     end
 
     %% FastAPI Backend
@@ -25,6 +31,7 @@ graph TD
         GB[Gradient Boosting Regressor]
         FAISS[FAISS Vector Store]
         DB[(SQLite - event_dna.db)]
+        WLM[Waterlogging GBDT Classifier]
     end
 
     %% Flow of New Incident
@@ -33,57 +40,147 @@ graph TD
     SBERT -->|3. Encode S-BERT Embedding| FAISS
     FAISS -->|4. Retrieve Top-5 Similar Events| API
     SBERT & API -->|5. Predict Impact Score| GB
-    API -->|6. Compile Recommendations| OC
+    API -->|6. Compile Recommendations| DO
     API -->|7. Write to DB| DB
     
     %% Feedback Loop
-    TOM -->|8. Log Actual Outcomes & Feedback| DB
+    LO -->|8. Log Actual Outcomes & Feedback| DB
     DB -->|9. Recalibrate Recommendations & Accuracy| TOM
 ```
 
 ---
 
-## 2. Key Modules & Features
+## 2. Project File Structure
 
-1. **Command Center**: Live incident logger and rapid dispatch dashboard.
-2. **EventDNA Explorer**: Inspects how semantic text representations are compiled and visualizes S-BERT embedding vector dimensions.
-3. **Similar Event Search**: Executes interactive text and semantic queries to search nearest matching events in the FAISS index.
-4. **Operations Copilot**: Displays tactical dispatch resource recommendations (officers, patrols, barricades) based on historical successful matches, alongside a resource multiplier simulation slider.
-5. **Zone Risk Intelligence**: Computes risk indices for zones based on historical congestion patterns.
-6. **Traffic Operations Memory (TOM)**: Post-event operational feedback logging and accuracy tracking system that allows the model to learn dynamically from actual outcomes.
+Here is a breakdown of the repository layout:
+
+| Path | Type | Description |
+| :--- | :--- | :--- |
+| `backend/app/` | Directory | FastAPI application directory hosting server logic. |
+| `backend/app/main.py` | File | API entry point defining endpoints for events, dispatches, predictions, and memory logging. |
+| `backend/app/ml_pipeline.py` | File | Orchestrates S-BERT encoding, FAISS similarity queries, and GBDT regressor predictions. |
+| `backend/app/waterlogging_predictor.py` | File | Underpass prediction module. Includes hardcoded Bangalore underpass fallback for offline resiliency. |
+| `backend/app/geospatial_engines.py` | File | GIS distance calculations and coordinate mapping routines. |
+| `backend/app/database.py` | File | Interface layer writing and reading data from the SQLite relational store. |
+| `frontend/src/app/` | Directory | Next.js Page-routing application structure. |
+| `frontend/src/app/page.tsx` | File | Complete dashboard interface comprising all 11 modules and sub-tabs. |
+| `docs/images/` | Directory | Documentation images, training graphs, and platform screenshots. |
+| `ml_training/` | Directory | Python scripts and notebooks for training the GBDT models. |
+| `event_dna.db` | File | Local SQLite database holding historical events, TOM records, and prediction metrics. |
+| `event_dna.index` | File | Serialized FAISS index storing the semantic embeddings of historical events. |
+| `impact_model.joblib` | File | Trained GBDT Regressor model predicting the event impact score. |
+| `preprocessors.joblib` | File | Feature scaling and label encoding pipeline assets. |
+| `requirements.txt` | File | Backend Python dependency definitions. |
 
 ---
 
-## 3. Tech Stack
+## 3. Product Features & Modules
 
-- **Frontend**: Next.js 15+, TypeScript, Tailwind CSS, Lucide React, Recharts.
-- **Backend**: FastAPI, Python 3.10+, Uvicorn.
-- **ML / AI Engine**:
-  - **Sentence-BERT** (`all-MiniLM-L6-v2` via `sentence-transformers`) for text embeddings.
-  - **FAISS** (`IndexFlatL2`) for sub-millisecond dense vector similarity search.
-  - **Gradient Boosting Regressor** (`scikit-learn` / `XGBoost` style) for event impact forecasting.
-  - **SQLite** (`event_dna.db`) for relational event history, memory logs, and metrics tracking.
+### 1. Command Center
+Allows operators to log new incident telemetry (cause, type, zone, priority, coordinates, and duration). A live feed highlights critical events using color-coded risk alerts and lists active impact scores.
+
+### 2. CORTEX Explorer
+Standardizes structured input parameters into human-readable English descriptions. Displays a color-coded grid representing the **384-dimensional Sentence-BERT dense vector** generated for the incident.
+
+### 3. Impact Radius GIS Map
+Interactive layout centered on Bangalore coordinates. Highlights the exact affected road segment and overlays custom buffer rings showing the geographical reach of the traffic disruption.
+
+### 4. Diversion Optimizer
+Calculates optimized detour paths around blocked segments utilizing the Google Maps Directions API. Renders detour routes on the map alongside metrics: *Travel Time Saved*, *Delay Avoided*, and step-by-step navigation instructions.
+
+### 5. Officer Management
+Geospatially maps and ranks local patrol units, officers, and supervisors by proximity (distance in km) and estimated time of arrival (ETA). Includes manual state toggles (`Available`, `Busy`, `Dispatched`).
+
+### 6. Log Outcomes & Learn
+De-brief module for active events. Operators submit the actual duration, exact resources deployed (officers, barricades), and a supervisor rating. This data is fed back into the learning memory to adjust models.
+
+### 7. Traffic Operations Memory (TOM)
+Houses all logged event history. Displays metrics detailing predicted vs actual metrics. If an entry is deleted, TOM decrements running counts and recalculates baseline metrics.
+
+### 8. Zone Risk Intelligence
+Draws historical risk indices across all BBMP zones to predict which areas are most vulnerable to bottlenecks.
+
+### 9. Post Event Analytics
+Displays comparative charts illustrating distribution by cause, operational success rates, resource utilization rates, and the running model accuracy improvement percentage.
+
+### 10. Astram Feed Simulator
+Simulates a real-time ingestion pipeline. Fetches records from the anonymized Astram traffic incident dataset and visualizes the sequential processing steps: text compilation, S-BERT encoding, FAISS similarity search, and model prediction.
+
+### 11. Waterlogging Alerts
+Uses monsoon simulation weather feeds to predict flooding probability at underpasses. If flooding risk exceeds threshold limits, it auto-triggers control room alerts and suggests nearest units.
 
 ---
 
-## 4. Run Instructions
+## 4. Machine Learning & Engineering Techniques
 
-### Start the FastAPI Backend
-Initialize and start the FastAPI server on port 8000:
+CORTEX AI integrates two machine learning pipelines:
+
+### A. Semantic Search & Impact Regression
+1. **Multimodal Encoding**: A custom compiler synthesizes event tags into descriptive text. The `all-MiniLM-L6-v2` Sentence-BERT transformer translates this text into a 384-dimensional embedding vector capturing semantic context.
+2. **Sub-millisecond Vector Query**: The vector is queried against a FAISS (Facebook AI Similarity Search) index using L2 distance metrics to retrieve the top 5 historically similar incidents.
+3. **GBDT Regression Forecast**: An XGBoost-style Gradient Boosting Decision Tree regressor combines numerical variables (coordinates, duration), encoded categorical tags (cause, priority, zone), and the dense text embedding array to predict the `impact_score` (0.0 to 100.0).
+
+### B. Underpass Climate Predictor
+1. **Feature Input**: Cumulative rainfall in the last 3 hours, rain intensity, and drainage blockages.
+2. **Gradient Boosting Classifier**: Predicts binary flood indicators (`is_flooded`).
+3. **Geofenced Dispatch**: Instantly triggers active alarms and identifies the two closest officers using a geospatial haversine proximity calculation.
+
+---
+
+## 5. Model Training & Proof of Validation
+
+### Tabular & Semantic Regression Results
+*   **Out-of-sample R² Score**: **91.6%**
+*   **Mean Absolute Error (MAE)**: **< 3.5%**
+
+### Training Curve Proof
+
+#### 1. Learning Convergence (Loss Curve)
+This graph showcases the MSE (Mean Squared Error) training vs validation loss over training iterations. The smooth convergence shows that our GBDT model generalizes cleanly without overfitting:
+![Training Loss Curve](./docs/images/loss_curve.png)
+
+#### 2. RMSE & R² Regression Metrics
+These plots track the reduction of root mean squared error (RMSE) and the rise of the R² score, stabilizing at 91.6%:
+![RMSE Curve](./docs/images/rmse_curve.png)
+![R2 Curve](./docs/images/r2_curve.png)
+
+#### 3. Complexity & Feature Importance
+Illustrates model regularization (preventing overfitting) and visualizes the predictive importance weight of S-BERT embeddings versus tabular features:
+![Complexity Curve](./docs/images/complexity_curve.png)
+![Feature Importance](./docs/images/feature_importance.png)
+
+---
+
+## 6. Live Platform Screenshots
+
+#### I. Command Center & Active Incidents Map
+Real-time command center interface displaying active events, risk thresholds, and the GIS tracking map:
+![Command Center](./docs/images/media__1782032499211.png)
+
+#### II. Traffic Operations Memory (TOM) Learning Curves
+Visualizes the running prediction accuracy, error reduction curves, and the supervisor feedback logs:
+![TOM Memory](./docs/images/media__1782032815061.png)
+
+#### III. Zone Risk Intelligence Heatmaps
+Predictive risk scores mapped across Bangalore zones:
+![Zone Risk](./docs/images/media__1782035636823.png)
+
+#### IV. Underpass Waterlogging Alerts Dashboard
+Telemetry rain gauge simulator showing triggered alerts and emergency officer dispatch lists:
+![Waterlogging Alerts](./docs/images/media__1782038142486.png)
+
+---
+
+## 7. Run Instructions
+
+### 1. Start the FastAPI Backend
 ```powershell
 python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000
 ```
 
-### Start the Next.js Frontend
-Start the Next.js development server on port 3000:
+### 2. Start the Next.js Frontend
 ```powershell
 cd frontend
 npm run dev
 ```
-
-*Note for Windows users:* If PowerShell blocks executing script commands due to execution policy limits, start the frontend using:
-```powershell
-cmd /c npm run dev
-```
-
 Open [http://localhost:3000](http://localhost:3000) in your browser.

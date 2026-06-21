@@ -71,6 +71,7 @@ Here is a breakdown of the repository layout:
 | `impact_model.joblib` | File | Trained GBDT Regressor model predicting the event impact score. |
 | `preprocessors.joblib` | File | Feature scaling and label encoding pipeline assets. |
 | `requirements.txt` | File | Backend Python dependency definitions. |
+| `.env.example` | File | Template file for configuring environment variables like GOOGLE_API_KEY. |
 
 ---
 
@@ -152,7 +153,22 @@ Illustrates model regularization (preventing overfitting) and visualizes the pre
 ---
 
 
-## 6. Run Instructions
+## 6. Environment Setup
+
+Before running the application, initialize the environment variables:
+
+1. **Copy the example configuration:**
+   ```bash
+   cp .env.example .env
+   ```
+2. **Configure your keys:**
+   Open the newly created `.env` file and fill in your API key:
+   - `GOOGLE_API_KEY`: Set this to your Google API Key with access to the Directions API for diversion routing and distance calculations.
+   - `NEXT_PUBLIC_API_URL`: Set this to your FastAPI backend URL (default is `http://127.0.0.1:8000`).
+
+---
+
+## 7. Run Instructions
 
 ### 1. Start the FastAPI Backend
 ```powershell
@@ -165,3 +181,4 @@ cd frontend
 npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) in your browser.
+

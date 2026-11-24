@@ -1,6 +1,7 @@
 import os
 import json
 import joblib
+import pandas as pd
 import requests
 from datetime import datetime
 from . import database
@@ -127,12 +128,12 @@ class WaterloggingPredictor:
             # Fetch weather (real-time from Open-Meteo or simulated)
             weather = self._fetch_weather_details(lat, lon, api_key, simulate_heavy_rain)
 
-            # Prepare features for the ML model (list of lists instead of pandas DataFrame)
-            features = [[
-                weather['rainfall_3hr_mm'],
-                weather['peak_intensity_mm_hr'],
-                default_blockage
-            ]]
+            # Prepare features for the ML model as DataFrame to avoid sklearn feature name warnings
+            features = pd.DataFrame([{
+                'rainfall_3hr_mm': weather['rainfall_3hr_mm'],
+                'peak_intensity_mm_hr': weather['peak_intensity_mm_hr'],
+                'drain_blockage_flag': default_blockage
+            }])
 
             # Run prediction
             is_flooded = 0

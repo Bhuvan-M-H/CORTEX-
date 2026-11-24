@@ -300,14 +300,15 @@ export default function Home() {
   const [predictingWaterlogging, setPredictingWaterlogging] = useState(false);
   const [simulateHeavyRain, setSimulateHeavyRain] = useState(false);
 
-  const runWaterloggingPrediction = async () => {
+  const runWaterloggingPrediction = async (simulateOverride?: boolean) => {
     setPredictingWaterlogging(true);
+    const shouldSimulate = typeof simulateOverride === 'boolean' ? simulateOverride : simulateHeavyRain;
     try {
       const res = await fetch(`${API_URL}/api/waterlogging/predict`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          simulate_heavy_rain: simulateHeavyRain
+          simulate_heavy_rain: shouldSimulate
         })
       });
       if (res.ok) {
@@ -3109,12 +3110,12 @@ export default function Home() {
                 </p>
               </div>
               <button 
-                onClick={runWaterloggingPrediction}
+                onClick={() => runWaterloggingPrediction()}
                 disabled={predictingWaterlogging}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-semibold transition-all duration-200 shadow-lg shadow-indigo-600/25"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-semibold transition-all duration-200 shadow-lg shadow-indigo-600/25 cursor-pointer"
               >
                 <RotateCw size={14} className={predictingWaterlogging ? "animate-spin" : ""} />
-                {predictingWaterlogging ? "Analyzing Weather..." : "Run Prediction"}
+                {predictingWaterlogging ? "Analyzing Weather..." : (simulateHeavyRain ? "Run Monsoon Simulation" : "Run Live Prediction")}
               </button>
             </div>
 
@@ -3152,7 +3153,11 @@ export default function Home() {
                     <input 
                       type="checkbox"
                       checked={simulateHeavyRain}
-                      onChange={(e) => setSimulateHeavyRain(e.target.checked)}
+                      onChange={(e) => {
+                        const nextVal = e.target.checked;
+                        setSimulateHeavyRain(nextVal);
+                        runWaterloggingPrediction(nextVal);
+                      }}
                       className="sr-only peer"
                     />
                     <div className="relative w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600 peer-checked:after:bg-indigo-200"></div>
@@ -3228,7 +3233,7 @@ export default function Home() {
                   <CloudRain className="mx-auto text-slate-600 animate-bounce mb-3" size={40} />
                   <p className="text-sm text-slate-400 font-medium">No weather predictions run yet.</p>
                   <button 
-                    onClick={runWaterloggingPrediction}
+                    onClick={() => runWaterloggingPrediction()}
                     className="mt-4 px-4 py-2 bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 text-xs font-bold rounded-lg border border-indigo-500/20"
                   >
                     Fetch Weather & Predict

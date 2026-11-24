@@ -138,6 +138,49 @@ interface Dispatch {
   impact_score: number;
 }
 
+const BANGALORE_HUBS = [
+  { name: "Majestic Bus Stand", junction: "Majestic Bus Stand, Kempegowda", zone: "Central Zone 1", lat: 12.9764, lon: 77.5729, address: "Majestic Bus Stand, Kempegowda, Bengaluru, Karnataka, India" },
+  { name: "M.G. Road", junction: "M.G. Road Metro Station", zone: "Central Zone 1", lat: 12.9738, lon: 77.6119, address: "M.G. Road, Bengaluru, Karnataka, India" },
+  { name: "Brigade Road", junction: "Brigade Road Junction", zone: "Central Zone 1", lat: 12.9719, lon: 77.6070, address: "Brigade Road, Ashok Nagar, Bengaluru, Karnataka, India" },
+  { name: "Central Silk Board", junction: "Silk Board Junction", zone: "South Zone 2", lat: 12.9176, lon: 77.6244, address: "Central Silk Board Junction, Hosur Road, Bengaluru, Karnataka, India" },
+  { name: "Koramangala Sony World", junction: "Sony World Signal, Koramangala", zone: "South Zone 2", lat: 12.9352, lon: 77.6245, address: "Sony World Junction, 80 Feet Road, Koramangala, Bengaluru, India" },
+  { name: "Indiranagar 100ft Road", junction: "100 Feet Road, Indiranagar", zone: "East Zone 1", lat: 12.9784, lon: 77.6408, address: "100 Feet Road, Indiranagar, Bengaluru, Karnataka, India" },
+  { name: "Whitefield ITPL", junction: "ITPL Main Road, Whitefield", zone: "East Zone 2", lat: 12.9855, lon: 77.7289, address: "ITPB / ITPL, Whitefield Main Road, Bengaluru, Karnataka, India" },
+  { name: "Hebbal Flyover", junction: "Hebbal Flyover Junction", zone: "North Zone 1", lat: 13.0359, lon: 77.5978, address: "Hebbal Flyover, Bellary Road, Bengaluru, Karnataka, India" },
+  { name: "Marathahalli Bridge", junction: "Marathahalli Bridge / ORR", zone: "East Zone 2", lat: 12.9569, lon: 77.7011, address: "Marathahalli Junction, Outer Ring Road, Bengaluru, Karnataka, India" },
+  { name: "Electronic City Toll", junction: "Electronic City Phase 1", zone: "South Zone 2", lat: 12.8452, lon: 77.6602, address: "Electronic City Toll Plaza, Hosur Road, Bengaluru, Karnataka, India" },
+  { name: "BTM Layout Udupi Garden", junction: "Udupi Garden Signal, BTM", zone: "South Zone 1", lat: 12.9166, lon: 77.6101, address: "Udupi Garden Signal, 16th Main Road, BTM Layout 2nd Stage, Bengaluru, India" },
+  { name: "Jayanagar 4th Block", junction: "Jayanagar 4th Block Complex", zone: "South Zone 1", lat: 12.9299, lon: 77.5824, address: "4th Block Jayanagar, Bengaluru, Karnataka, India" },
+  { name: "Banashankari Bus Stand", junction: "Banashankari Temple Junction", zone: "South Zone 1", lat: 12.9155, lon: 77.5736, address: "Banashankari TTMC, Kanakapura Road, Bengaluru, Karnataka, India" },
+  { name: "Malleswaram 8th Cross", junction: "Malleswaram Circle", zone: "North Zone 2", lat: 13.0031, lon: 77.5694, address: "8th Cross Malleswaram, Margosa Road, Bengaluru, Karnataka, India" },
+  { name: "Rajajinagar Navrang", junction: "Navrang Circle, Rajajinagar", zone: "West Zone 1", lat: 12.9982, lon: 77.5530, address: "Navrang Circle, Dr Rajkumar Road, Rajajinagar, Bengaluru, India" },
+  { name: "Shivajinagar Bus Stand", junction: "Shivajinagar(BRV)Junction", zone: "Central Zone 2", lat: 12.9857, lon: 77.6057, address: "Shivajinagar Bus Terminus, Russell Market, Bengaluru, Karnataka, India" },
+  { name: "Richmond Circle", junction: "Richmond Flyover Circle", zone: "Central Zone 1", lat: 12.9600, lon: 77.5970, address: "Richmond Circle, General K.S. Thimayya Road, Bengaluru, Karnataka, India" },
+  { name: "KR Puram Hanging Bridge", junction: "K.R. Puram Cable Bridge", zone: "East Zone 2", lat: 13.0007, lon: 77.6974, address: "K.R. Puram Hanging Bridge, Old Madras Road, Bengaluru, Karnataka, India" },
+  { name: "Tin Factory", junction: "Tin Factory Junction", zone: "East Zone 2", lat: 12.9950, lon: 77.6710, address: "Tin Factory Bus Stop, Kasturi Nagar, Bengaluru, Karnataka, India" },
+  { name: "Bellandur EcoSpace", junction: "Bellandur Junction / EcoSpace", zone: "East Zone 2", lat: 12.9260, lon: 77.6762, address: "Bellandur Outer Ring Road, Bengaluru, Karnataka, India" },
+  { name: "Sarjapur Road Wipro", junction: "Sarjapur Road / Kaikondrahalli", zone: "East Zone 2", lat: 12.9112, lon: 77.6853, address: "Sarjapur Main Road, Doddakannelli, Bengaluru, Karnataka, India" },
+  { name: "HSR Layout BDA Complex", junction: "HSR Layout Sector 1", zone: "South Zone 2", lat: 12.9121, lon: 77.6446, address: "HSR Layout BDA Complex, 27th Main Road, Bengaluru, Karnataka, India" },
+  { name: "Mekhri Circle", junction: "Mekhri Circle Underpass", zone: "North Zone 1", lat: 13.0116, lon: 77.5847, address: "Mekhri Circle, Bellary Road, Sadashivanagar, Bengaluru, Karnataka, India" },
+  { name: "Domlur Flyover", junction: "Domlur Junction / IRR", zone: "East Zone 1", lat: 12.9609, lon: 77.6387, address: "Domlur Flyover, Old Airport Road, Bengaluru, Karnataka, India" },
+  { name: "Trinity Circle", junction: "Trinity Metro Station", zone: "Central Zone 1", lat: 12.9723, lon: 77.6190, address: "Trinity Circle, Mahatma Gandhi Road, Bengaluru, Karnataka, India" },
+  { name: "Yeshwanthpur Govardhan", junction: "Yeshwanthpur Circle / Railway", zone: "North Zone 2", lat: 13.0285, lon: 77.5458, address: "Yeshwanthpur Govardhan Theater, Tumkur Road, Bengaluru, Karnataka, India" },
+  { name: "Goraguntepalya", junction: "Goraguntepalya Junction", zone: "North Zone 2", lat: 13.0287, lon: 77.5367, address: "Goraguntepalya, Outer Ring Road, Bengaluru, Karnataka, India" },
+  { name: "Peenya 1st Stage", junction: "Peenya Industrial Area", zone: "West Zone 2", lat: 13.0329, lon: 77.5186, address: "Peenya Industrial Area, Bengaluru, Karnataka, India" },
+  { name: "Lingarajapuram Underpass", junction: "Lingarajapuram Flyover Underpass", zone: "East Zone 1", lat: 13.0105, lon: 77.6242, address: "Lingarajapuram Flyover Underpass, Bengaluru, Karnataka, India" },
+  { name: "Manyata Tech Park", junction: "Nagavara Junction / Manyata", zone: "North Zone 1", lat: 13.0456, lon: 77.6200, address: "Manyata Embassy Business Park, Outer Ring Road, Nagavara, Bengaluru, India" },
+  { name: "Hennur Cross", junction: "Hennur Cross / Outer Ring Road", zone: "East Zone 1", lat: 13.0261, lon: 77.6402, address: "Hennur Cross, Kalyan Nagar, Bengaluru, Karnataka, India" },
+  { name: "Yelahanka Police Station", junction: "Yelahanka Kogilu Cross", zone: "North Zone 1", lat: 13.1007, lon: 77.5963, address: "Yelahanka Police Station, BB Road, Bengaluru, Karnataka, India" },
+  { name: "Bannerghatta Dairy Circle", junction: "Dairy Circle Flyover", zone: "South Zone 1", lat: 12.9385, lon: 77.5959, address: "Dairy Circle, Hosur Road, Bengaluru, Karnataka, India" },
+  { name: "Mysore Road Satellite Bus Stand", junction: "Satellite Bus Stand, Mysore Road", zone: "West Zone 1", lat: 12.9537, lon: 77.5450, address: "KSRTC Satellite Bus Station, Mysore Road, Bengaluru, Karnataka, India" },
+  { name: "Nayandahalli Junction", junction: "Nayandahalli Metro Station / ORR", zone: "West Zone 1", lat: 12.9432, lon: 77.5218, address: "Nayandahalli Junction, Outer Ring Road, Bengaluru, Karnataka, India" },
+  { name: "Vijayanagar TTMC", junction: "Vijayanagar Bus Station", zone: "West Zone 1", lat: 12.9698, lon: 77.5358, address: "Vijayanagar TTMC, Chord Road, Bengaluru, Karnataka, India" },
+  { name: "Lalbagh West Gate", junction: "Minerva Circle / Lalbagh", zone: "Central Zone 2", lat: 12.9507, lon: 77.5848, address: "Lalbagh West Gate, Basavanagudi, Bengaluru, Karnataka, India" },
+  { name: "Corporation Circle", junction: "Corporation / Hudson Circle", zone: "Central Zone 1", lat: 12.9698, lon: 77.5878, address: "Corporation Circle, Nrupathunga Road, Bengaluru, Karnataka, India" },
+  { name: "Frazer Town Coles Park", junction: "Coles Park, Promenade Road", zone: "East Zone 1", lat: 12.9968, lon: 77.6133, address: "Coles Park, Frazer Town, Bengaluru, Karnataka, India" },
+  { name: "Kadubeesanahalli", junction: "Kadubeesanahalli Underpass / Cisco", zone: "East Zone 2", lat: 12.9365, lon: 77.6917, address: "Kadubeesanahalli Underpass, Outer Ring Road, Bengaluru, Karnataka, India" }
+];
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState('command-center');
   const [eventsData, setEventsData] = useState<{events: Event[], total_count: number}>({events: [], total_count: 0});
@@ -168,10 +211,18 @@ export default function Home() {
   const [tomIncidentsRisk, setTomIncidentsRisk] = useState('All');
   const [tomIncidentsLoading, setTomIncidentsLoading] = useState(false);
   
-  // Geocoding States
+  // Geocoding & Autocomplete States
   const [searchQuery, setSearchQuery] = useState('');
   const [geocoding, setGeocoding] = useState(false);
   const [geocodedAddress, setGeocodedAddress] = useState<string>('');
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [activeMapFocus, setActiveMapFocus] = useState<{ lat: number; lon: number; junction: string } | null>(null);
+
+  // Unified Map Display Center
+  const currentLat = activeMapFocus ? activeMapFocus.lat : (selectedEvent ? selectedEvent.latitude : 12.9716);
+  const currentLon = activeMapFocus ? activeMapFocus.lon : (selectedEvent ? selectedEvent.longitude : 77.5946);
+  const currentJunction = activeMapFocus ? activeMapFocus.junction : (selectedEvent ? selectedEvent.junction : 'Bangalore Command');
 
   // Manual Dispatch States
   const [manualDispatchOpen, setManualDispatchOpen] = useState(false);
@@ -529,6 +580,7 @@ export default function Home() {
 
   const handleSelectEvent = async (event: Event) => {
     setSelectedEvent(event);
+    setActiveMapFocus({ lat: event.latitude, lon: event.longitude, junction: event.junction });
     setAutonomousAlert(null); // Clear any active alerts
 
     // Fetch fused context & routing vectors dynamically
@@ -584,6 +636,109 @@ export default function Home() {
     });
   };
 
+  // Real-time location search and autocomplete
+  const handleSearchInputChange = async (val: string) => {
+    setSearchQuery(val);
+    if (!val || val.trim().length === 0) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    const q = val.toLowerCase().trim();
+    // 1. Instant local Bangalore hubs match (0ms latency)
+    const localMatches = BANGALORE_HUBS.filter(h => 
+      h.name.toLowerCase().includes(q) || 
+      h.junction.toLowerCase().includes(q) || 
+      h.address.toLowerCase().includes(q)
+    ).slice(0, 6);
+
+    setSuggestions(localMatches);
+    setShowSuggestions(true);
+
+    // 2. Fetch live suggestions from API
+    try {
+      const res = await fetch(`${API_URL}/api/geocode/suggestions?query=${encodeURIComponent(val)}`);
+      if (res.ok) {
+        const apiSuggestions = await res.json();
+        if (apiSuggestions && apiSuggestions.length > 0) {
+          const merged = [...localMatches];
+          for (const s of apiSuggestions) {
+            const jName = s.junction || s.name;
+            if (!merged.some(m => m.junction === jName || m.name === jName)) {
+              merged.push({
+                name: s.name || s.junction,
+                junction: s.junction || s.name,
+                zone: s.zone || 'Central Zone 1',
+                lat: s.lat ?? s.latitude,
+                lon: s.lon ?? s.longitude,
+                address: s.address
+              });
+            }
+          }
+          setSuggestions(merged.slice(0, 8));
+        }
+      }
+    } catch (e) {
+      // Local matches already populated, ignore background fetch errors
+    }
+  };
+
+  const applyLocation = async (loc: any) => {
+    const lat = Number(loc.lat ?? loc.latitude);
+    const lon = Number(loc.lon ?? loc.longitude);
+    const junc = loc.junction || loc.name || (loc.address ? loc.address.split(',')[0] : 'Bengaluru Location');
+    const zone = loc.zone || newEvent.zone || 'Central Zone 1';
+    const addr = loc.address || junc;
+
+    setSearchQuery(loc.name || junc);
+    setGeocodedAddress(addr);
+    setShowSuggestions(false);
+
+    setNewEvent(prev => ({
+      ...prev,
+      latitude: lat,
+      longitude: lon,
+      junction: junc,
+      zone: zone
+    }));
+
+    // Focus the live operations map on the selected area
+    setActiveMapFocus({ lat, lon, junction: junc });
+
+    // Instantly compute and preview the solution (impact radius & diversion corridors) for this typed location!
+    try {
+      const res = await fetch(`${API_URL}/api/predict`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event_cause: newEvent.event_cause,
+          event_type: newEvent.event_type,
+          zone: zone,
+          junction: junc,
+          requires_road_closure: newEvent.requires_road_closure,
+          duration: newEvent.duration,
+          priority: newEvent.priority,
+          latitude: lat,
+          longitude: lon
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setLiveTraffic(data.live_traffic);
+        setImpactRadiusM(data.impact_radius_m);
+        setImpactRadiusKm(data.impact_radius_km);
+        setAffectedJunctions(data.affected_junctions);
+        setAffectedRoads(data.affected_roads);
+        setSeverityLevel(data.severity_level);
+        setDiversionRoutes(data.diversion_routes || []);
+        setGeojsonVisualizations(data.geojson_visualizations);
+      }
+    } catch (err) {
+      console.error("Error computing location preview:", err);
+    }
+  };
+
   // geocode Search
   const handleGeocodeSearch = async () => {
     if (!searchQuery.trim()) return;
@@ -592,13 +747,13 @@ export default function Home() {
       const res = await fetch(`${API_URL}/api/geocode?query=${encodeURIComponent(searchQuery)}`);
       if (!res.ok) throw new Error("Location not found");
       const data = await res.json();
-      setNewEvent(prev => ({
-        ...prev,
-        latitude: data.latitude,
-        longitude: data.longitude,
-        junction: data.address.split(',')[0]
-      }));
-      setGeocodedAddress(data.address);
+      await applyLocation({
+        lat: data.latitude,
+        lon: data.longitude,
+        junction: data.junction || data.address.split(',')[0],
+        zone: data.zone,
+        address: data.address
+      });
     } catch (err: any) {
       alert("Geocoding failed. Using nearest match fallback.");
     } finally {
@@ -616,25 +771,17 @@ export default function Home() {
         const lat = position.coords.latitude;
         const lon = position.coords.longitude;
         
-        // Check if coordinates are in Bangalore boundaries
-        const isWithinBangalore = (lat >= 12.80 && lat <= 13.15) && (lon >= 77.30 && lon <= 77.85);
-        
-        if (!isWithinBangalore) {
-          alert(`Your live location (${lat.toFixed(4)}, ${lon.toFixed(4)}) is outside the Bangalore operational boundary. Clamping to nearest boundary.`);
-        }
-        
+        // Restrict coordinates to Bangalore boundaries
         const clampedLat = Math.min(13.15, Math.max(12.80, lat));
         const clampedLon = Math.min(77.85, Math.max(77.30, lon));
         
-        setNewEvent(prev => ({
-          ...prev,
-          latitude: clampedLat,
-          longitude: clampedLon,
-          junction: `Live Location (${clampedLat.toFixed(4)}, ${clampedLon.toFixed(4)})`
-        }));
-        
-        setSearchQuery(`Live Location (${clampedLat.toFixed(4)}, ${clampedLon.toFixed(4)})`);
-        setGeocodedAddress(`Live Location (${clampedLat.toFixed(4)}, ${clampedLon.toFixed(4)})`);
+        applyLocation({
+          lat: clampedLat,
+          lon: clampedLon,
+          junction: `Live Location (${clampedLat.toFixed(4)}, ${clampedLon.toFixed(4)})`,
+          zone: 'Central Zone 1',
+          address: `Live GPS Location (${clampedLat.toFixed(4)}, ${clampedLon.toFixed(4)})`
+        });
       },
       (error) => {
         alert("Failed to retrieve live location: " + error.message);
@@ -689,6 +836,7 @@ export default function Home() {
       
       // Switch select event
       setSelectedEvent(result.event);
+      setActiveMapFocus({ lat: result.event.latitude, lon: result.event.longitude, junction: result.event.junction });
       setLiveTraffic(result.predictions.live_traffic);
       setImpactRadiusM(result.predictions.impact_radius_m);
       setImpactRadiusKm(result.predictions.impact_radius_km);
@@ -1099,29 +1247,69 @@ export default function Home() {
                 </div>
 
                 <form onSubmit={handleSubmitNewEvent} className="space-y-3">
-                  {/* Location Search Geocoder (Integrated) */}
-                  <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800">
+                  {/* Location Search Geocoder & Autocomplete (Integrated) */}
+                  <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800 relative">
                     <label className="text-[10px] text-cyan-400 font-mono uppercase font-bold block mb-1">Incident Location / Junction</label>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 relative">
                       <input
                         type="text"
                         value={searchQuery}
-                        onChange={e => setSearchQuery(e.target.value)}
-                        placeholder="e.g. Majestic Bus Stand, Bangalore"
+                        onChange={e => handleSearchInputChange(e.target.value)}
+                        onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
+                        onKeyDown={e => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            if (suggestions.length > 0) {
+                              applyLocation(suggestions[0]);
+                            } else {
+                              handleGeocodeSearch();
+                            }
+                          }
+                        }}
+                        placeholder="e.g. Majestic, Koramangala, Indiranagar..."
                         className="flex-1 glass-input px-2.5 py-1 text-xs rounded"
                         required
+                        autoComplete="off"
                       />
                       <button
                         type="button"
                         onClick={handleGeocodeSearch}
                         disabled={geocoding}
-                        className="px-3 py-1 bg-cyan-600 hover:bg-cyan-500 rounded text-xs text-white font-semibold"
+                        className="px-3 py-1 bg-cyan-600 hover:bg-cyan-500 rounded text-xs text-white font-semibold transition-all shrink-0"
                       >
                         {geocoding ? '...' : 'Search'}
                       </button>
                     </div>
+
+                    {/* Autocomplete Recommendations Dropdown */}
+                    {showSuggestions && suggestions.length > 0 && (
+                      <div className="absolute left-3 right-3 top-[62px] z-[999] bg-[#0c1427] border border-cyan-500/40 rounded-lg shadow-2xl backdrop-blur-md max-h-56 overflow-y-auto divide-y divide-slate-800/80">
+                        {suggestions.map((loc, idx) => (
+                          <div
+                            key={idx}
+                            onMouseDown={() => applyLocation(loc)}
+                            className="p-2.5 hover:bg-indigo-600/25 cursor-pointer flex justify-between items-center transition-colors text-left group"
+                          >
+                            <div className="min-w-0 pr-2">
+                              <div className="text-xs font-semibold text-slate-100 group-hover:text-cyan-300 flex items-center gap-1.5 truncate">
+                                <MapPin size={12} className="text-cyan-400 shrink-0" />
+                                <span className="truncate">{loc.name || loc.junction}</span>
+                              </div>
+                              <p className="text-[10px] text-slate-400 truncate pl-4">{loc.address}</p>
+                            </div>
+                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-slate-800/90 text-cyan-300 font-mono border border-slate-700/60 shrink-0">
+                              {loc.zone?.replace(' Zone', '') || 'BLR'}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
                     {geocodedAddress && (
-                      <p className="text-[10px] text-emerald-400 mt-1 truncate italic">✓ Resolved: {geocodedAddress}</p>
+                      <div className="flex items-center gap-1 mt-1.5 text-[10px] text-emerald-400 truncate italic">
+                        <CheckCircle size={11} className="shrink-0" />
+                        <span className="truncate">Mapped: {geocodedAddress}</span>
+                      </div>
                     )}
                     <div className="flex justify-between items-center mt-2 pt-2 border-t border-slate-900/60">
                       <span className="text-[9px] text-slate-500 font-mono">or coordinates:</span>
@@ -1247,30 +1435,31 @@ export default function Home() {
                         />
                         H3 Grid Overlay
                       </label>
-                      {selectedEvent && (
-                        <span className="text-[10px] font-mono text-cyan-400">Centered: {selectedEvent.junction}</span>
+                      {(activeMapFocus || selectedEvent) && (
+                        <span className="text-[10px] font-mono text-cyan-400">Centered: {currentJunction}</span>
                       )}
                     </div>
                   </div>
                   
                   {/* Map Component */}
-                  {selectedEvent ? (
+                  {(activeMapFocus || selectedEvent) ? (
                     <div className="relative">
                       <LeafletMapComponent 
-                        centerLat={selectedEvent.latitude}
-                        centerLon={selectedEvent.longitude}
+                        centerLat={currentLat}
+                        centerLon={currentLon}
                         radiusM={impactRadiusM}
                         eventsData={eventsData.events}
                         officersData={officers}
                         diversionRoutes={diversionRoutes}
                         geojsonVisualizations={geojsonVisualizations}
                         selectedEvent={selectedEvent}
+                        activeFocusLabel={currentJunction}
                         showHoneycomb={showHoneycomb}
                       />
                     </div>
                   ) : (
                     <div className="h-96 rounded-lg bg-slate-950 flex items-center justify-center text-slate-500">
-                      Select an event to load Command Center Map view
+                      Select an event or search a location to load Command Center Map view
                     </div>
                   )}
                 </div>
@@ -1504,14 +1693,15 @@ export default function Home() {
                   </div>
 
                   <LeafletMapComponent 
-                    centerLat={selectedEvent.latitude}
-                    centerLon={selectedEvent.longitude}
+                    centerLat={currentLat}
+                    centerLon={currentLon}
                     radiusM={impactRadiusM}
                     eventsData={eventsData.events}
                     officersData={officers}
                     diversionRoutes={[]}
                     geojsonVisualizations={geojsonVisualizations}
                     selectedEvent={selectedEvent}
+                    activeFocusLabel={currentJunction}
                     showHoneycomb={showHoneycomb}
                   />
                 </div>
@@ -1695,14 +1885,15 @@ export default function Home() {
                   <div className="col-span-2 glass-panel p-4 rounded-xl">
                     <span className="text-xs font-mono uppercase tracking-wider text-cyan-400 font-bold block mb-3">Detour Paths map layer</span>
                     <LeafletMapComponent 
-                      centerLat={selectedEvent.latitude}
-                      centerLon={selectedEvent.longitude}
+                      centerLat={currentLat}
+                      centerLon={currentLon}
                       radiusM={impactRadiusM}
                       eventsData={eventsData.events}
                       officersData={officers}
                       diversionRoutes={diversionRoutes}
                       geojsonVisualizations={geojsonVisualizations}
                       selectedEvent={selectedEvent}
+                      activeFocusLabel={currentJunction}
                       showHoneycomb={showHoneycomb}
                       highlightedRouteIndex={highlightedRouteIndex}
                       hideRadiusCircles={true}
@@ -1901,14 +2092,15 @@ export default function Home() {
                   <span className="text-xs font-mono uppercase tracking-wider text-cyan-400 font-bold block mb-3">Officer Mobiles Tracking</span>
                   {selectedEvent ? (
                     <LeafletMapComponent 
-                      centerLat={selectedEvent.latitude}
-                      centerLon={selectedEvent.longitude}
+                      centerLat={currentLat}
+                      centerLon={currentLon}
                       radiusM={impactRadiusM}
                       eventsData={eventsData.events}
                       officersData={officers}
                       diversionRoutes={[]}
                       geojsonVisualizations={geojsonVisualizations}
                       selectedEvent={selectedEvent}
+                      activeFocusLabel={currentJunction}
                       showHoneycomb={showHoneycomb}
                     />
                   ) : (
@@ -3145,7 +3337,7 @@ export default function Home() {
 }
 
 // Separate Map Loader and Rendering Component to ensure Leaflet only runs client-side
-function LeafletMapComponent({ centerLat, centerLon, radiusM, eventsData, officersData, diversionRoutes, geojsonVisualizations, selectedEvent, showHoneycomb, highlightedRouteIndex, hideRadiusCircles, showZoneRisk }: any) {
+function LeafletMapComponent({ centerLat, centerLon, radiusM, eventsData, officersData, diversionRoutes, geojsonVisualizations, selectedEvent, activeFocusLabel, showHoneycomb, highlightedRouteIndex, hideRadiusCircles, showZoneRisk }: any) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const [L, setL] = useState<any>(null);
@@ -3346,7 +3538,7 @@ function LeafletMapComponent({ centerLat, centerLon, radiusM, eventsData, office
     });
 
     L.marker([centerLat, centerLon], { icon: eventIcon }).addTo(map)
-      .bindPopup(`<b>Incident Target</b><br/>${selectedEvent?.junction || "Active Zone"}`);
+      .bindPopup(`<b>Incident Target</b><br/>${activeFocusLabel || selectedEvent?.junction || "Active Target"}`);
 
     return () => {
       if (mapRef.current) {
@@ -3354,7 +3546,7 @@ function LeafletMapComponent({ centerLat, centerLon, radiusM, eventsData, office
         mapRef.current = null;
       }
     };
-  }, [L, centerLat, centerLon, radiusM, officersData, diversionRoutes, geojsonVisualizations, highlightedRouteIndex, hideRadiusCircles, showZoneRisk]);
+  }, [L, centerLat, centerLon, radiusM, officersData, diversionRoutes, geojsonVisualizations, highlightedRouteIndex, hideRadiusCircles, showZoneRisk, activeFocusLabel]);
 
   return (
     <div 

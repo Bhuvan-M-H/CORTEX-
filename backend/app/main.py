@@ -352,9 +352,17 @@ def get_metrics():
 
 # NEW ENDPOINT 9: Automatic Location Intelligence geocoder
 @app.get("/api/geocode")
-def geocode(query: str = Query(..., min_length=2)):
+def geocode(query: str = Query(..., min_length=1)):
     try:
         data = live_traffic.geocode_location(query)
+        return data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/geocode/suggestions")
+def geocode_suggestions(query: str = Query("", min_length=0)):
+    try:
+        data = live_traffic.get_location_suggestions(query)
         return data
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

@@ -13,4 +13,3 @@ geopy
 shapely
 h3
 openpyxl
-sentence-transformers>=2.2.0

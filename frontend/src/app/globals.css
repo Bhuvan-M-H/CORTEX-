@@ -119,3 +119,8 @@ body {
   animation: scanline 6s linear infinite;
   pointer-events: none;
 }
+
+/* High-contrast dark cyber styling for OpenStreetMap basemap tiles (no watermark, no API key required) */
+.dark-map-tiles {
+  filter: invert(100%) hue-rotate(180deg) brightness(88%) contrast(115%) saturate(65%);
+}

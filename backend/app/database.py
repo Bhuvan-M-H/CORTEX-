@@ -5,7 +5,7 @@ import random
 from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-DB_PATH = os.path.join(BASE_DIR, "event_dna.db")
+DB_PATH = os.environ.get("DATABASE_PATH") or os.path.join(BASE_DIR, "event_dna.db")
 
 def get_db_connection():
     conn = sqlite3.connect(DB_PATH)

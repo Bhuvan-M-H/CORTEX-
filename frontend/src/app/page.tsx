@@ -14,7 +14,7 @@ import {
 } from 'recharts';
 import 'leaflet/dist/leaflet.css';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000").replace(/\/$/, "");
 
 interface Event {
   id: number;
@@ -1736,6 +1736,25 @@ export default function Home() {
                 </div>
 
               </div>
+            ) : selectedEvent ? (
+              <div className="glass-panel p-8 text-center rounded-xl space-y-4 max-w-xl mx-auto my-8">
+                <div className="inline-flex p-3 rounded-full bg-indigo-500/10 text-indigo-400">
+                  <Navigation size={28} />
+                </div>
+                <h3 className="text-base font-bold text-white">No Detour Pre-calculated for Incident #{selectedEvent.id}</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Active incident: <strong className="text-slate-200 capitalize">{selectedEvent.event_cause.replace('_', ' ')}</strong> at <strong className="text-slate-200">{selectedEvent.junction}</strong>. Road closure is currently set to <span className="font-mono text-cyan-400">{selectedEvent.requires_road_closure === 1 ? 'Mandatory' : 'Advisory'}</span>.
+                </p>
+                <div className="pt-2">
+                  <button 
+                    onClick={() => handleSelectEvent(selectedEvent)}
+                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg shadow-lg shadow-indigo-600/30 transition-all inline-flex items-center gap-2"
+                  >
+                    <RotateCw size={13} />
+                    Generate Alternative Detour Corridors
+                  </button>
+                </div>
+              </div>
             ) : (
               <div className="glass-panel p-6 text-center text-slate-400 rounded-xl">
                 Please select an event in the Command Center to run the Diversion Optimizer.
@@ -3168,8 +3187,9 @@ function LeafletMapComponent({ centerLat, centerLon, radiusM, eventsData, office
       attributionControl: false
     });
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      maxZoom: 20
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      className: 'dark-map-tiles'
     }).addTo(map);
 
     mapRef.current = map;

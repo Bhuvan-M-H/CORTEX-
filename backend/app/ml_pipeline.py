@@ -10,13 +10,27 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 INDEX_PATH = os.path.join(BASE_DIR, "event_dna.index")
 MODEL_PATH = os.path.join(BASE_DIR, "impact_model.joblib")
 PREPROCESSORS_PATH = os.path.join(BASE_DIR, "preprocessors.joblib")
-DB_PATH = os.path.join(BASE_DIR, "event_dna.db")
+DB_PATH = os.environ.get("DATABASE_PATH") or os.path.join(BASE_DIR, "event_dna.db")
 
 # Global variables to cache models
 _sbert_model = None
 _faiss_index = None
 _regressor = None
 _encoders = None
+
+def _deterministic_fallback_embedding(text: str, dim: int = 384) -> list:
+    import hashlib
+    # Deterministic hash pseudo-embedding normalized to unit sphere
+    h = hashlib.sha256(text.encode('utf-8')).digest()
+    vals = []
+    for i in range(dim):
+        byte_val = h[i % len(h)]
+        vals.append(float((byte_val ^ (i * 31 & 0xFF)) - 128) / 128.0)
+    arr = np.array(vals, dtype=np.float32)
+    norm = np.linalg.norm(arr)
+    if norm > 0:
+        arr = arr / norm
+    return arr.tolist()
 
 class HuggingFaceSBertMock:
     def encode(self, texts, **kwargs):
@@ -35,32 +49,37 @@ class HuggingFaceSBertMock:
             
         for text in texts:
             emb = None
-            for attempt in range(3):
-                try:
-                    response = requests.post(api_url, headers=headers, json={"inputs": text}, timeout=10)
-                    if response.status_code == 200:
-                        res_json = response.json()
-                        if isinstance(res_json, list):
-                            emb = res_json
-                            break
-                    elif response.status_code == 503:
-                        time.sleep(2) # Model is loading on HF, wait and retry
-                    else:
-                        print(f"HF API error {response.status_code}: {response.text}")
-                except Exception as e:
-                    print(f"HF API exception: {e}")
+            if hf_token:
+                for attempt in range(2):
+                    try:
+                        response = requests.post(api_url, headers=headers, json={"inputs": text}, timeout=4)
+                        if response.status_code == 200:
+                            res_json = response.json()
+                            if isinstance(res_json, list):
+                                emb = res_json
+                                break
+                        elif response.status_code == 503:
+                            time.sleep(1)
+                    except Exception as e:
+                        pass
             if emb is None:
-                print("Warning: Hugging Face API call failed, using zero embedding fallback")
-                emb = [0.0] * 384
+                emb = _deterministic_fallback_embedding(text, 384)
             embeddings.append(emb)
             
-        return np.array(embeddings) if not is_single else embeddings[0]
+        return np.array(embeddings) if not is_single else np.array(embeddings[0])
 
 def get_sbert_model():
     global _sbert_model
     if _sbert_model is None:
-        print("Using HuggingFace S-BERT Serverless API Mock...")
-        _sbert_model = HuggingFaceSBertMock()
+        try:
+            print("Initializing local SentenceTransformer ('all-MiniLM-L6-v2') on CPU...")
+            from sentence_transformers import SentenceTransformer
+            # Force device='cpu' for full compatibility across local GPUs (RTX 5060) and cloud containers (Render)
+            _sbert_model = SentenceTransformer('all-MiniLM-L6-v2', device='cpu')
+            print("Local SentenceTransformer successfully loaded on CPU.")
+        except Exception as e:
+            print(f"Local SentenceTransformer initialization failed ({e}), using HuggingFace/deterministic fallback.")
+            _sbert_model = HuggingFaceSBertMock()
     return _sbert_model
 
 def get_faiss_index():

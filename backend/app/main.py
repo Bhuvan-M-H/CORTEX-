@@ -555,8 +555,9 @@ def get_underpasses():
     try:
         from .waterlogging_predictor import WaterloggingPredictor
         predictor = WaterloggingPredictor()
-        if predictor.underpasses_df is not None:
-            return predictor.underpasses_df.to_dict(orient="records")
+        underpasses = getattr(predictor, "underpasses", [])
+        if underpasses:
+            return underpasses
         return []
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
